@@ -15,7 +15,7 @@ export const useLinkStore = create((set) => ({
     getLinks: async () => {
         set({ loading: true });
         try {
-            const res = await axios.get("/links");
+            const res = await axios.get("/api/links");
             set({ links: res.data.data });
         } catch (error) {
             console.error("Error fetching links:", error);
@@ -28,7 +28,7 @@ export const useLinkStore = create((set) => ({
 
     incrementClickCount: async (id) => {
         try {
-            const res = await axios.put(`/links/increment-click/${id}`);
+            const res = await axios.put(`/api/links/increment-click/${id}`);
             if (res.data) {
                 return res.data;
             }
@@ -42,7 +42,7 @@ export const useLinkStore = create((set) => ({
     addLink: async ({ redirect_url, short_code }) => {
         set({ loading: true });
         try {
-            const res = await axios.post("/links", { redirect_url, short_code });
+            const res = await axios.post("/api/links", { redirect_url, short_code });
             if (res.data) {
                 toast.success(res.data.message);
 
@@ -60,7 +60,7 @@ export const useLinkStore = create((set) => ({
 
     editLink: async (id, updatedFields) => {
         try {
-            const res = await axios.put(`/links/${id}`, updatedFields);
+            const res = await axios.put(`/api/links/${id}`, updatedFields);
             if (res.data) {
                 return res.data;
             }
@@ -75,7 +75,7 @@ export const useLinkStore = create((set) => ({
     deleteLink: async (id) => {
         set({ loading: true });
         try {
-            const res = await axios.delete(`/links/${id}`);
+            const res = await axios.delete(`/api/links/${id}`);
             if (res.data) {
                 toast.success(res.data.message);
 
