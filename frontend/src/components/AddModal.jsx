@@ -27,7 +27,7 @@ const AddModal = () => {
       if (res.data) {
         setError("");
         getLinks();
-        toggleModal();
+        handleClose();
       }
     } catch (error) {
       setError(error.response.data.message);
@@ -37,6 +37,7 @@ const AddModal = () => {
   const handleClose = () => {
     toggleModal();
     setShortCode("");
+    setError("");
     setRedirectUrl("");
   };
 
