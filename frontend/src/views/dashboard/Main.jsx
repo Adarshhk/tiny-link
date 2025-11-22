@@ -57,7 +57,7 @@ const Main = () => {
   return (
     <div className="max-w-7xl w-[90%] mx-auto mt-10">
       <h1 className="text-3xl font-bold text-blue-900 mb-6 border-b border-black/20">
-        TiniU.rl
+        TinyLink
       </h1>
 
       <div className="w-full flex items-center justify-between my-4 gap-4">
