@@ -17,9 +17,15 @@ const AddModal = () => {
       redirect_url: redirectUrl,
     };
 
+    if (redirectUrl == "") {
+      setError("Please enter redirect url.");
+      return;
+    }
+
     try {
       const res = await addLink(payload);
       if (res.data) {
+        setError("");
         getLinks();
         toggleModal();
       }
@@ -48,19 +54,6 @@ const AddModal = () => {
           <form onSubmit={handleSubmit} className="mt-4 space-y-4">
             <div>
               <label className="text-sm font-medium text-gray-700">
-                Short Code
-              </label>
-              <input
-                type="text"
-                value={shortCode}
-                onChange={(e) => setShortCode(e.target.value)}
-                placeholder="ex: yt123"
-                className="w-full mt-1 text-[13.33px] px-3 py-2 border rounded-md outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-gray-700">
                 Redirect URL
               </label>
               <input
@@ -69,6 +62,19 @@ const AddModal = () => {
                 onChange={(e) => setRedirectUrl(e.target.value)}
                 placeholder="https://example.com"
                 className="w-full text-[13.33px] px-3 py-2 border rounded-md outline-none focus:ring-2 mt-1 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Short Code{" "}
+                <span className="text-[12px] text-black/60 italic">{`(optional)`}</span>
+              </label>
+              <input
+                type="text"
+                value={shortCode}
+                onChange={(e) => setShortCode(e.target.value)}
+                placeholder="ex: yt123"
+                className="w-full mt-1 text-[13.33px] px-3 py-2 border rounded-md outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div className="flex gap-4 items-center">

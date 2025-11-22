@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { nanoid } from "nanoid";
 import pool from "../db/db.js";
 
 const router = Router();
@@ -14,23 +15,38 @@ router.get('/api/links', async (req, res) => {
 })
 
 router.post('/api/links', async (req, res) => {
-
     try {
-        const { short_code, redirect_url } = req.body;
+        let { short_code, redirect_url } = req.body;
 
-        if (!short_code || !redirect_url) {
-            return res.status(400).json({ data: null, message: 'short_code and redirect_url are required', success: false });
+        if (!redirect_url) {
+            return res.status(400).json({
+                data: null,
+                message: "redirect_url is required",
+                success: false
+            });
         }
 
-        const newLink = await pool.query('INSERT INTO links (short_code , redirect_url) VALUES ($1 , $2) RETURNING *', [short_code, redirect_url]);
-
-        if (!newLink) {
-            return res.status(500).json({ data: null, message: 'Error creating link', success: false });
+        // Auto-generate short_code if not provided
+        if (!short_code) {
+            short_code = nanoid(7); // 7 chars is perfect for short URLs
         }
 
-        return res.status(201).json({ data: newLink.rows[0], message: 'Link created successfully', success: true });
+        // Insert
+        const newLink = await pool.query(
+            'INSERT INTO links (short_code, redirect_url) VALUES ($1, $2) RETURNING *',
+            [short_code, redirect_url]
+        );
+
+        return res.status(201).json({
+            data: newLink.rows[0],
+            message: 'Link created successfully',
+            success: true
+        });
+
     } catch (error) {
         console.error('error in creating link', error);
+
+        // Unique violation → regenerate
         if (error.code === "23505") {
             return res.status(409).json({
                 message: "Short Code Already Exists.",
@@ -38,9 +54,14 @@ router.post('/api/links', async (req, res) => {
                 data: null
             });
         }
-        return res.status(500).json({ message: 'Internal Server Error', data: null, success: false });
+
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            data: null,
+            success: false
+        });
     }
-})
+});
 
 
 router.put('/api/links/:id', async (req, res) => {
