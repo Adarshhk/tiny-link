@@ -29,13 +29,12 @@ app.get("/healthz", (req, res) => {
 // --------- SERVE FRONTEND BUILD ----------
 // Vite uses /dist
 const frontendDist = path.join(__dirname, "..", "frontend", "dist");
-
+// serve frontend
 app.use(express.static(frontendDist));
 
-// catch-all → send index.html for React Router
-app.get("/*", (req, res) => {
+// express 5 safe catch-all route
+app.get(/.*/, (req, res) => {
     res.sendFile(path.join(frontendDist, "index.html"));
 });
-
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on ${port}`));
